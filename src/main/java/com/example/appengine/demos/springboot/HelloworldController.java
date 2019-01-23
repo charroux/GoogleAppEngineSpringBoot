@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -37,27 +38,37 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 @RestController
 public class HelloworldController {
-  @GetMapping("/")
+	
+  @GetMapping("/person")
   public String hello() {
+	
+	  System.out.println("GET on /person");
 	  
 	  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	  
-	  Entity tintin = new Entity("Person");
-	  tintin.setProperty("age", 20);
-	  tintin.setProperty("name", "Tintin");
-	  
-	  datastore.put(tintin);
-	  
-	  Filter propertyFilter = new FilterPredicate("age", FilterOperator.GREATER_THAN_OR_EQUAL, 18);
-	  
-	  Query q = new Query("Person").setFilter(propertyFilter);
-	  List<Entity> results = datastore.prepare(q.setKeysOnly()).asList(FetchOptions.Builder.withDefaults());
+	  Query q = new Query("Person");
+	  List<Entity> results = datastore.prepare(q).asList(FetchOptions.Builder.withDefaults());
 
 	  System.out.println(results);
 	  
 	  return "Hello world - springboot-appengine-standard - data store!";
   }
-  
+
+  @PostMapping("/person")
+  public void addPerson(@RequestBody Person person) {
+	  
+	  System.out.println(person);
+
+	  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	  
+	  Entity tintin = new Entity("Person");
+	  tintin.setProperty("age", person.getAge());
+	  tintin.setProperty("name", person.getName());
+	  
+	  datastore.put(tintin);
+
+  }
+
  
 
 }
