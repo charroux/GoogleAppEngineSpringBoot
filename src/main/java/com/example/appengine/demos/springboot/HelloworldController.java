@@ -16,6 +16,8 @@
 
 package com.example.appengine.demos.springboot;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
-
-
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions; 
@@ -36,9 +40,21 @@ public class HelloworldController {
   @GetMapping("/")
   public String hello() {
 	  
-	  //DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	  Queue queue = QueueFactory.getDefaultQueue();
-	  queue.add(TaskOptions.Builder.withUrl("/worker").method(Method.POST)); 
+	  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	  
+	  Entity tintin = new Entity("Person");
+	  tintin.setProperty("age", 20);
+	  tintin.setProperty("name", "Tintin");
+	  
+	  datastore.put(tintin);
+	  
+	  Filter propertyFilter = new FilterPredicate("age", FilterOperator.GREATER_THAN_OR_EQUAL, 18);
+	  
+	  Query q = new Query("Person").setFilter(propertyFilter);
+	  List<Entity> results = datastore.prepare(q.setKeysOnly()).asList(FetchOptions.Builder.withDefaults());
+
+	  System.out.println(results);
+	  
 	  return "Hello world - springboot-appengine-standard - data store!";
   }
   
