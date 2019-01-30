@@ -4,6 +4,14 @@ Build du projet : https://github.com/GoogleCloudPlatform/getting-started-java/tr
 
 Welcome page : http://localhost:8080/static/index.html
 
+Add the dependency into pom.xml :
+
+	<dependency>
+	    <groupId>com.google.appengine</groupId>
+	    <artifactId>appengine-api-1.0-sdk</artifactId>
+	    <version>1.9.71</version>
+	</dependency>
+
 ## Lab 1: NoSQL in the Cloud
 
 The web form: https://github.com/charroux/GoogleAppEngineSpringBoot/blob/master/src/main/webapp/static/createPerson.html
