@@ -28,9 +28,6 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions; 
@@ -42,7 +39,7 @@ public class HelloworldController {
   @GetMapping("/person")
   public String hello() {
 	
-	  System.out.println("GET on /person");
+	  System.out.println("GET on /person display :");
 	  
 	  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	  
@@ -51,7 +48,7 @@ public class HelloworldController {
 
 	  System.out.println(results);
 	  
-	  return "Hello world - springboot-appengine-standard - data store!";
+	  return "Look at the console";
   }
 
   @PostMapping("/person")
@@ -61,11 +58,17 @@ public class HelloworldController {
 
 	  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	  
-	  Entity tintin = new Entity("Person");
-	  tintin.setProperty("age", person.getAge());
-	  tintin.setProperty("name", person.getName());
+	  Entity entity = new Entity("Person");
+	  entity.setProperty("age", person.getAge());
 	  
-	  datastore.put(tintin);
+	  String name = person.getName();
+	  
+	  entity.setProperty("name", name);
+	  
+	  datastore.put(entity);
+	  
+	  Queue queue = QueueFactory.getDefaultQueue();
+	  queue.add(TaskOptions.Builder.withUrl("/worker").method(Method.POST).param("name", name)); 
 
   }
 
