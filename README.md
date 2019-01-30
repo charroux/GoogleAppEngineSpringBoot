@@ -10,10 +10,12 @@ The web form: https://github.com/charroux/GoogleAppEngineSpringBoot/blob/master/
 
 The Web Service : https://github.com/charroux/GoogleAppEngineSpringBoot/blob/master/src/main/java/com/example/appengine/demos/springboot/HelloworldController.java
 
-## Lab 2: decloupling and scalling up and app, fault tolerance with a queue int the Cloud
+## Lab 2: decloupling and scalling up an app, fault tolerance with a queue int the Cloud
+
+The backend Task begin the queue: 
+
+The front end task writing into the queue
 
 ## Lab 3:  share the same running app with your custumers with a multi-tenany architecture
-
-## Lab 4: optimize your app by caching data in front of a database
 
  
